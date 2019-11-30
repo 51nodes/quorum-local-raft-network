@@ -4,16 +4,18 @@ Work In Progress
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
-Setup a local quroum network with 3 nodes using raft consensus algorithm without tx manager.
+Setup a local [quorum network](https://www.goquorum.com/) with 3 nodes using [raft consensus](https://raft.github.io/)  algorithm without tx manager.
 
 ## Rpc proxy to avoid timestamp error
-Raft use the timestamp in nano seconds which is bigger than the max number in javascript,
-therefore we need a proxy to filter the rpc requests and responses and convert the timestamp to seconds.
+
+Javascript could safely store numbers up to 53 bits so the biggest safest number that can be stored is equal to `2^(53)-1`. However, the implementation of [Raft](https://raft.github.io/) uses timestamp in nanoseconds which is bigger than that safest number.
+
+The RPC requests [eth_getBlockByHash](https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getblockbyhash) and [eth_getblockbynumber](https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getblockbynumber), which is used frequently by truffle migrate and test commands, return a block object contain the timestamp. Therefore, we need a proxy to read the timestamp from those responses as BigNumber and then convert it to seconds.
+
 Original repository for the proxy https://github.com/edgraaff/quorum-rpc-proxy
 
 ## Quorum local
-Based on the 7-nodes example of quorum  https://github.com/jpmorganchase/quorum-examples
-and simplified to 3 nodes with only raft consensus without tx manager.
+Based on the [7-nodes example](https://github.com/jpmorganchase/quorum-examples) of quorum and simplified to 3 nodes with only [Raft consensus](https://raft.github.io/) without tx manager.
 
 ## Run the 3 nodes in containers plus one container for the proxy
 run:    `docker-compose up -d`
@@ -51,5 +53,3 @@ but then it will either give an error back or get stuck without any information.
 to deploy contract without proxy: `truffle migrate --reset --network nodeone`
 
 test contract without proxy: `truffle test ./test/metacoin.js --network nodeone`
-
-
