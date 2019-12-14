@@ -15,7 +15,7 @@ RUN mkdir -p /usr/src/app
 
 WORKDIR /usr/src/app
 
-RUN git clone https://github.com/MajdT51/quorum-rpc-proxy.git
+RUN git clone https://github.com/edgraaff/quorum-rpc-proxy.git
 
 # change directory and run 'npm install' && 'npm cache clean --force'
 WORKDIR  /usr/src/app/quorum-rpc-proxy

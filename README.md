@@ -1,10 +1,8 @@
 # quorum-local-raft-network
 
-Work In Progress
-
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
-Setup a local [quorum network](https://www.goquorum.com/) with 3 nodes using [raft consensus](https://raft.github.io/)  algorithm without tx manager.
+Setup a minimal local [quorum network](https://www.goquorum.com/) with 3 nodes using [raft consensus](https://raft.github.io/)  algorithm without tx manager (does not support private transactions).
 
 ## Rpc proxy to avoid timestamp error
 
@@ -37,19 +35,19 @@ stop:       `docker-compose stop`
 remove:     `docker-compose down -v`
 
 ## Run truffle example
-based on the meta coin truffle-box example
+Based on the [meta coin truffle-box](https://www.trufflesuite.com/boxes/metacoin) example
 
 change to the example directory:  `cd ./example`
 
 ### With Proxy
-to deploy contract and library with proxy: `truffle migrate --reset --network nodeoneproxy`
+to deploy contract and library with proxy: `truffle migrate --reset --network withProxy`
 
-to test the contract with proxy: `truffle test ./test/metacoin.js --network nodeoneproxy`
+to test the contract with proxy: `truffle test ./test/metacoin.js --network withProxy`
 
 ### Without Proxy 
 the given truffle commands will start the process,
 but then it will either give an error back or get stuck without any information.
 
-to deploy contract without proxy: `truffle migrate --reset --network nodeone`
+to deploy contract without proxy: `truffle migrate --reset --network withoutProxy`
 
-test contract without proxy: `truffle test ./test/metacoin.js --network nodeone`
+test contract without proxy: `truffle test ./test/metacoin.js --network withoutProxy`

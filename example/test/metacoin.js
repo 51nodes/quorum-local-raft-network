@@ -1,12 +1,14 @@
 const MetaCoin = artifacts.require('MetaCoin');
 
 contract('MetaCoin', (accounts) => {
+
   it('should put 10000 MetaCoin in the first account', async () => {
     const metaCoinInstance = await MetaCoin.deployed();
     const balance = await metaCoinInstance.getBalance.call(accounts[0]);
 
     assert.equal(balance.valueOf(), 10000, '10000 was not in the first account');
   });
+
   it('should call a function that depends on a linked library', async () => {
     const metaCoinInstance = await MetaCoin.deployed();
     const metaCoinBalance = (await metaCoinInstance.getBalance.call(accounts[0])).toNumber();
