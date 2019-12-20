@@ -1,5 +1,5 @@
 
-#  QUORUM_DOCKER_IMAGE: default to quorumengineering/quorum:2.3.0
+# QUORUM_DOCKER_IMAGE: default to quorumengineering/quorum:2.3.0
 # To use Remix, set QUORUM_GETH_ARGS="--rpccorsdomain https://remix.ethereum.org"
 version: "3.6"
 x-quorum-def:
@@ -94,17 +94,6 @@ services:
     networks:
       quorum-simple-net:
         ipv4_address: 172.16.239.13
-  proxy:
-    restart: "on-failure"
-    build:
-      context: .
-    ports:
-      - "22003:7545"
-      - "22004:7546"
-      - "22005:7547"
-    networks:
-      quorum-simple-net:
-        ipv4_address: 172.16.239.14
 networks:
   quorum-simple-net:
     name: quorum-simple-net
