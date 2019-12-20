@@ -18,8 +18,6 @@ run:    `docker-compose up -d`
 
 access to geth of nodes: `docker exec -it <container_name> geth attach ./qdata/dd/geth.ipc`
 
-check logs of proxy: `docker logs quorum_raft_proxy_1`
-
 stop:       `docker-compose stop`
 
 remove:     `docker-compose down -v`
