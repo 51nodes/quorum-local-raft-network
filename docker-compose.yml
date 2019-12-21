@@ -1,0 +1,108 @@
+
+# QUORUM_DOCKER_IMAGE: default to quorumengineering/quorum:2.3.0
+# To use Remix, set QUORUM_GETH_ARGS="--rpccorsdomain https://remix.ethereum.org"
+version: "3.6"
+x-quorum-def:
+  &quorum-def
+  restart: "on-failure"
+  image: "${QUORUM_DOCKER_IMAGE:-quorumengineering/quorum:2.3.0}"
+  expose:
+    - "21000"
+    - "50400"
+  healthcheck:
+    test: ["CMD", "wget", "--spider", "--proxy", "off", "http://localhost:8545"]
+    interval: 4s
+    timeout: 4s
+    retries: 10
+    start_period: 5s
+  labels:
+    com.quorum.consensus: raft
+  entrypoint:
+    - /bin/sh
+    - -c
+    - |
+      DDIR=/qdata/dd
+      rm -rf $${DDIR}
+      mkdir -p $${DDIR}/keystore
+      mkdir -p $${DDIR}/geth
+      cp /3nodes/raft/nodekey$${NODE_ID} $${DDIR}/geth/nodekey
+      cp /3nodes/keys/key$${NODE_ID} $${DDIR}/keystore/
+      cat /3nodes/permissioned-nodes.json | sed 's/^\(.*\)@.*\?\(.*\)raftport=5040\([0-9]\)\(.*\)$$/\1@172.16.239.1\3:21000?discport=0\&raftport=50400\4/g' > $${DDIR}/static-nodes.json
+      cp $${DDIR}/static-nodes.json $${DDIR}/permissioned-nodes.json
+      cat $${DDIR}/static-nodes.json
+      GENESIS_FILE="/3nodes/genesis.json"
+      NETWORK_ID=$$(cat $${GENESIS_FILE} | grep chainId | awk -F " " '{print $$2}' | awk -F "," '{print $$1}')
+      GETH_ARGS_raft="--raft --raftport 50400"
+      geth --datadir $${DDIR} init $${GENESIS_FILE}
+      geth \
+        --identity node$${NODE_ID}-raft \
+        --datadir $${DDIR} \
+        --permissioned \
+        --nodiscover \
+        --verbosity 5 \
+        --networkid $${NETWORK_ID} \
+        --rpc \
+        --rpccorsdomain "*" \
+        --rpcvhosts "*" \
+        --rpcaddr 0.0.0.0 \
+        --rpcport 8545 \
+        --rpcapi admin,db,eth,debug,miner,net,shh,txpool,personal,web3,quorum,raft \
+        --port 21000 \
+        --unlock 0 \
+        --password /3nodes/passwords.txt \
+        ${QUORUM_GETH_ARGS:-} $${GETH_ARGS_raft}
+services:
+  node1:
+    << : *quorum-def
+    hostname: node1
+    ports:
+      - "22000:8545"
+    volumes:
+      - vol1:/qdata
+      - ./3nodes:/3nodes:ro
+    environment:
+      - PRIVATE_CONFIG=ignore
+      - NODE_ID=1
+    networks:
+      quorum-simple-net:
+        ipv4_address: 172.16.239.11
+  node2:
+    << : *quorum-def
+    hostname: node2
+    ports:
+      - "22001:8545"
+    volumes:
+      - vol2:/qdata
+      - ./3nodes:/3nodes:ro
+    environment:
+      - PRIVATE_CONFIG=ignore
+      - NODE_ID=2
+    networks:
+      quorum-simple-net:
+        ipv4_address: 172.16.239.12
+  node3:
+    << : *quorum-def
+    hostname: node3
+    ports:
+      - "22002:8545"
+    volumes:
+      - vol3:/qdata
+      - ./3nodes:/3nodes:ro
+    environment:
+      - PRIVATE_CONFIG=ignore
+      - NODE_ID=3
+    networks:
+      quorum-simple-net:
+        ipv4_address: 172.16.239.13
+networks:
+  quorum-simple-net:
+    name: quorum-simple-net
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.239.0/24
+volumes:
+  "vol1":
+  "vol2":
+  "vol3":
