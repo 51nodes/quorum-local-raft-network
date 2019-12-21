@@ -7,7 +7,7 @@ Setup a minimal local [quorum network](https://www.goquorum.com/) with 3 nodes u
 ## Quorum local
 Build a local Quorum network based on the [7-nodes example](https://github.com/jpmorganchase/quorum-examples) and simplified to 3 nodes with only [Raft consensus](https://raft.github.io/) without tx manager.
 
-## Run the 3 nodes in containers plus one container for the proxy
+## Run the 3 nodes in containers
 run:    `docker-compose up -d`
 
 3 Docker Containers
