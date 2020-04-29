@@ -11,9 +11,15 @@ Build a local Quorum network based on the [7-nodes example](https://github.com/j
 run:    `docker-compose up -d`
 
 3 Docker Containers
-1. quorum_raft_node1_1 : access at port 22000
-2. quorum_raft_node2_1 : access at port 22001
-3. quorum_raft_node3_1 : access at port 22002
+1. quorum_raft_node1_1
+   - RPC Port: 22000
+   - WS Port: 23000
+2. quorum_raft_node2_1
+   - RPC Port: 22001
+   - WS Port: 23001
+3. quorum_raft_node3_1
+   - RPC Port: 22002
+   - WS Port: 23002
 
 
 access to geth of nodes: `docker exec -it <container_name> geth attach ./qdata/dd/geth.ipc`
