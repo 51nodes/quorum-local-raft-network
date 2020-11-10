@@ -1,11 +1,11 @@
 
-# QUORUM_DOCKER_IMAGE: default to quorumengineering/quorum:2.3.0
+# QUORUM_DOCKER_IMAGE: default to quorumengineering/quorum:20.10.0
 # To use Remix, set QUORUM_GETH_ARGS="--rpccorsdomain https://remix.ethereum.org"
-version: "3.6"
+version: "3.8"
 x-quorum-def:
   &quorum-def
   restart: "on-failure"
-  image: "${QUORUM_DOCKER_IMAGE:-quorumengineering/quorum:2.3.0}"
+  image: "${QUORUM_DOCKER_IMAGE:-quorumengineering/quorum:20.10.0}"
   expose:
     - "21000"
     - "50400"
@@ -35,6 +35,7 @@ x-quorum-def:
       GETH_ARGS_raft="--raft --raftport 50400"
       geth --datadir $${DDIR} init $${GENESIS_FILE}
       geth \
+        --allow-insecure-unlock \
         --identity node$${NODE_ID}-raft \
         --datadir $${DDIR} \
         --permissioned \

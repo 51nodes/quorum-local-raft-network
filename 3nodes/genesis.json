@@ -21,12 +21,19 @@
     "homesteadBlock": 0,
     "byzantiumBlock": 0,
     "constantinopleBlock": 0,
+    "petersburgBlock": 0,
+    "istanbulBlock": 0,
     "chainId": 10,
     "eip150Block": 0,
     "eip155Block": 0,
     "eip150Hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
     "eip158Block": 0,
-    "maxCodeSize": 35,
+    "maxCodeSizeConfig" : [
+      {
+        "block" : 0,
+        "size" : 32
+      }
+    ],
     "isQuorum": true
   },
   "difficulty": "0x0",
