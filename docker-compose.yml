@@ -22,7 +22,6 @@ x-quorum-def:
     - -c
     - |
       DDIR=/qdata/dd
-      rm -rf $${DDIR}
       mkdir -p $${DDIR}/keystore
       mkdir -p $${DDIR}/geth
       cp /3nodes/raft/nodekey$${NODE_ID} $${DDIR}/geth/nodekey
